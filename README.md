@@ -1,3 +1,6 @@
-Repository for the Tensorflow and PyTorch code for Conditional Density Estimator (CDE) with neural networks.
+DeepCDE: Neural Networks Conditional Density Estimation
+===
+
+Conditional density estimation via deep neural network using CDE loss.
 
 Authors: Taylor Pospisil, Nic Dalmasso
