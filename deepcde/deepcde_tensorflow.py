@@ -16,6 +16,12 @@ def nll_loss(beta, z_basis, shrink_factor, name="nll_loss"):
         loss = tf.reduce_mean(-fit_terms) / shrink_factor
         return loss
 
+def approx_cde_loss(beta, z_basis, shrink_factor, name="approx cde_loss"):
+    with tf.name_scope(name):
+        complexity_terms = tf.reduce_sum(tf.square(beta), axis=1) + 1.0
+        loss = tf.reduce_mean(-1 * complexity_terms) / shrink_factor
+        return loss
+
 
 ### EXTRA LAYER (before softmax)
 
@@ -33,11 +39,14 @@ def cde_layer(inputs, weight_sd, marginal_beta, name="cde_layer"):
 
 ### PREDICTION FUNCTION
 
-def cde_predict(sess, beta, z_min, z_max, z_grid, z_grid_basis, input_dict):
+def cde_predict(sess, beta, z_min, z_max, z_grid, z_grid_basis, input_dict,
+                delta=None, bin_size=0.01):
     beta = sess.run(beta, feed_dict=input_dict)
     n_obs = beta.shape[0]
     beta = np.hstack((np.ones((n_obs, 1)), beta))
     cdes = np.matmul(beta, z_grid_basis.T)
+    if delta is not None:
+        remove_bumps(cdes, delta=delta, bin_size=bin_size)
     normalize(cdes)
     cdes /= np.prod(z_max - z_min)
     return cdes
