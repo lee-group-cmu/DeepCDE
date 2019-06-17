@@ -1,3 +1,4 @@
 .idea/*
 deepcde/__pycache__/*
 deepcde/deepcde.py
+examples/*
