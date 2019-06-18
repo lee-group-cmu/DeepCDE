@@ -53,11 +53,11 @@ class approx_cde_loss(nn.Module):
 #### DEFINE PREDICTION FUNCTION
 
 def cde_predict(model_output, z_min, z_max, z_grid,
-                basis, n_basis, delta=None, bin_size=0.01):
+                basis, delta=None, bin_size=0.01):
 
     n_obs = model_output.shape[0]
     beta = np.hstack((np.ones((n_obs, 1)), model_output))
-    z_grid_basis = basis.evaluate(z_grid)[:, :n_basis]
+    z_grid_basis = basis.evaluate(z_grid)[:, :basis.n_basis]
     cdes = np.matmul(beta, z_grid_basis.T)
     if delta is not None:
         remove_bumps(cdes, delta=delta, bin_size=bin_size)
