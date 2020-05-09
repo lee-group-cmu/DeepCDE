@@ -1,5 +1,5 @@
 import tensorflow as tf
-from utils import normalize
+from .utils import normalize
 
 ### LOSS FUNCTIONS
 
@@ -29,7 +29,7 @@ def cde_layer(inputs, weight_sd, marginal_beta=None, name="cde_layer"):
     with tf.name_scope(name):
         W_shape = [int(inputs.shape[1]), len(marginal_beta) - 1]
         W = tf.Variable(tf.random_normal(W_shape, stddev=weight_sd), name="W")
-        b = tf.get_variable("b", initializer=marginal_beta[1:]) if marginal_beta else tf.get_variable("b")
+        b = tf.get_variable("b", initializer=marginal_beta[1:]) if marginal_beta is not None else tf.get_variable("b")
         beta = tf.matmul(inputs, W) + b
         # tf.summary.histogram("weights", W)
         # tf.summary.histogram("biases", b)
